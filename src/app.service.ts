@@ -12,7 +12,11 @@ export class AppService {
   ) {}
 
   getTodos(): Promise<Todo[]> {
-    return this.todoRepository.find();
+    return this.todoRepository.find({
+      order: {
+        id: 'DESC',
+      },
+    });
   }
 
   createTodo(input: CreateTodoDTO) {
