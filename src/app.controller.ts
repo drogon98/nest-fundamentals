@@ -9,7 +9,8 @@ import {
   Body,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { CreateTodoDTO, Todo } from './app.dto';
+import { CreateTodoDTO } from './app.dto';
+import { Todo } from './app.entity';
 
 @Controller('todos')
 export class AppController {
@@ -21,25 +22,19 @@ export class AppController {
   }
 
   @Post()
-  async createTodo(@Body() payload: CreateTodoDTO): Promise<string> {
-    console.log('payload', payload);
-    return this.appService.createTodo();
+  async createTodo(@Body() payload: CreateTodoDTO) {
+    return this.appService.createTodo(payload);
   }
 
-  @Put(':id/:name')
+  @Put(':id')
   @HttpCode(201)
-  async updateTodo(
-    @Param('id') id: string,
-    @Param('name') name: string,
-  ): Promise<string> {
-    console.log(id);
-    console.log(name);
-    return this.appService.updateTodo();
+  async updateTodo(@Param('id') id: string, @Body() payload: CreateTodoDTO) {
+    return this.appService.updateTodo(parseInt(id), payload);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async deleteTodo(): Promise<string> {
-    return this.appService.deleteTodo();
+  async deleteTodo(@Param('id') id: string) {
+    return this.appService.deleteTodo(parseInt(id));
   }
 }

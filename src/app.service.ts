@@ -1,23 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { Todo } from './app.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Todo } from './app.entity';
+import { Repository } from 'typeorm';
+import { CreateTodoDTO } from './app.dto';
 
 @Injectable()
 export class AppService {
-  todos: Todo[] = [];
+  constructor(
+    @InjectRepository(Todo)
+    private todoRepository: Repository<Todo>,
+  ) {}
 
-  getTodos(): Todo[] {
-    return this.todos;
+  getTodos(): Promise<Todo[]> {
+    return this.todoRepository.find();
   }
 
-  createTodo() {
-    return 'Created todo!';
+  createTodo(input: CreateTodoDTO) {
+    return this.todoRepository.save(input);
   }
 
-  updateTodo() {
-    return 'Updated todo!';
+  updateTodo(id: number, input: CreateTodoDTO) {
+    return this.todoRepository.update(id, input);
   }
 
-  deleteTodo() {
-    return 'Deleted todo!';
+  deleteTodo(id: number) {
+    return this.todoRepository.delete(id);
   }
 }
